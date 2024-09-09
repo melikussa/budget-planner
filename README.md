@@ -6,7 +6,7 @@
 3) Enjoy!
 
 ## Development Instructions
-Coming soon
+1) Setup visual studio code to easily clone the git repo
 
 --
 
