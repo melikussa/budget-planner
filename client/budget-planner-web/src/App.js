@@ -9,19 +9,25 @@ import UserProfile from "./components/Profile/UserProfile";
 
 function App() {
 
-  const [message, setMessage] = useState("");
-  const fetchSecuredMessage = async () => {
-    const username = "demo_user"; // ეს მერე ნამდვილი იუზერით შევცვალოთ
-    const password = "demo_pass"; // ას ნამდვილი პაროლით შევცვალოთ
-    const token = btoa(`${username}:${password}`); // Encode credentials in base64
-    const response = await fetch("http://localhost:8080/hello/lika", {
-      headers: {
-        Authorization: `Basic ${token}`,
-      },
-    });
-    const data = await response.text();
-    setMessage(data);
-  };
+  const [message, setMessage] = useState('');
+    const fetchSecuredMessage = async () => {
+        const username = 'demo_user'; // ეს მერე ნამდვილი იუზერით შევცვალოთ
+        const password = 'demo_pass'; // ას ნამდვილი პაროლით შევცვალოთ
+
+        const token = btoa(`${username}:${password}`);  // Encode credentials in base64
+
+        const response = await fetch('http://localhost:8080/hello/lika', {
+          method: 'GET',
+          headers: {
+              'Authorization': `Basic ${token}`,
+              'Content-Type': 'application/json'
+          },
+          credentials: 'include',  // Ensure credentials are sent
+      });
+        const data = await response.json();
+        console.log(data);
+        setMessage(data.message);
+    };
 
 
   return ( 
@@ -34,7 +40,6 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>
-
 
       <div>
          <h1>Basic Authentication with React and Spring Boot</h1>
