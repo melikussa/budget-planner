@@ -1,4 +1,5 @@
 import { useState, useRef, useContext } from "react";
+import AuthContext from "../store/auth-context";
 
 import classes from "./AuthForm.module.css";
 
@@ -7,7 +8,9 @@ const AuthForm = () => {
   const passwordInputRef = useRef();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
+
+  const authCtx = useContext(AuthContext); 
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -23,30 +26,33 @@ const AuthForm = () => {
     // add validation here
     console.log(enteredEmail, enteredPassword);
 
-
     setIsLoading(true);
-    fetchSecuredMessage(enteredEmail, enteredPassword) //sending request
+    fetchSecuredMessage(enteredEmail, enteredPassword); //sending request
   };
 
   const fetchSecuredMessage = async (enteredEmail, enteredPassword) => {
-    const username = enteredEmail; // demo_user
+    const username = enteredEmail; // demo_user 
     const password = enteredPassword; // demo_pass
 
-    const token = btoa(`${username}:${password}`);  // Encode credentials in base64
+    // we should include username and password in a request
 
-    const response = await fetch('http://localhost:8080/hello/lika', {
-      method: 'GET',
+    const token = btoa(`${username}:${password}`); // Encode credentials in base64
+
+    const response = await fetch("http://localhost:8080/hello/lika", {
+      method: "GET",
       headers: {
-          'Authorization': `Basic ${token}`,
-          'Content-Type': 'application/json'
+        Authorization: `Basic ${token}`,
+        "Content-Type": "application/json",
       },
-      credentials: 'include',  // Ensure credentials are sent
-  });
+      credentials: "include", // Ensure credentials are sent
+    });
     const data = await response.json();
     console.log(data);
     setIsLoading(false);
     setMessage(data.message);
-};
+ //   authCtx.login(data.token); 
+    console.log(data.token);
+  };
 
   return (
     <section className={classes.auth}>
@@ -56,7 +62,7 @@ const AuthForm = () => {
           <label htmlFor="email">Email</label>
           <input
             ref={emailInputRef}
-        //    type="email"
+            //    type="email"
             id="email"
             autoComplete="new-password"
             required
